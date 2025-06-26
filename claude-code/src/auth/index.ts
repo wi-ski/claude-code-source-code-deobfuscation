@@ -112,6 +112,16 @@ export class AuthManager {
         }
       } else {
         logger.debug('No stored auth token found');
+        
+        // Check for API key in environment variables
+        const apiKeyFromEnv = process.env.ANTHROPIC_API_KEY;
+        if (apiKeyFromEnv) {
+          logger.debug('Found API key in environment, auto-authenticating');
+          const authResult = await this.authenticateWithApiKey(apiKeyFromEnv);
+          if (authResult.success) {
+            logger.info('Auto-authenticated with API key from environment');
+          }
+        }
       }
       
       this.state.initialized = true;
