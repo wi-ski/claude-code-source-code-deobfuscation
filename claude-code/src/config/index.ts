@@ -278,14 +278,7 @@ export async function loadConfig(options: any = {}): Promise<any> {
   // Validate the configuration
   validateConfig(config);
   
-  // Configure logger
-  import('../utils/logger.js').then(loggerModule => {
-    if (loggerModule.configureLogger) {
-      loggerModule.configureLogger(config);
-    }
-  }).catch(error => {
-    logger.warn('Failed to configure logger', error);
-  });
+  // Logger configuration is handled during logger initialization
   
   return config;
 }

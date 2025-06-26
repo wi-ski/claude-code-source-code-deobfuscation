@@ -31,16 +31,33 @@ export async function createPrompt<T>(options: PromptOptions, config: TerminalCo
   }
   
   try {
+    // Create a clean options object that inquirer can handle
+    const promptConfig: any = {
+      type: options.type,
+      name: String(options.name),
+      message: options.message,
+      default: options.default,
+      validate: options.validate
+    };
+
+    // Add type-specific properties
+    if (options.type === 'input' || options.type === 'password') {
+      if ('filter' in options) promptConfig.filter = options.filter;
+      if ('transformer' in options) promptConfig.transformer = options.transformer;
+      if ('mask' in options) promptConfig.mask = options.mask;
+    } else if (options.type === 'list' || options.type === 'rawlist' || options.type === 'checkbox') {
+      if ('choices' in options) promptConfig.choices = options.choices;
+      if ('pageSize' in options) promptConfig.pageSize = options.pageSize;
+    } else if (options.type === 'editor') {
+      if ('postfix' in options) promptConfig.postfix = options.postfix;
+    }
+
     // Use Inquirer to create the prompt
-    const result = await inquirer.prompt([{
-      ...options,
-      // Make sure name is a string
-      name: String(options.name)
-    }]);
+    const result = await inquirer.prompt([promptConfig]);
     
     logger.debug('Prompt result', { name: options.name, result: result[options.name] });
     
-    return result;
+    return result as T;
   } catch (error) {
     logger.error('Error in prompt', error);
     throw new Error(`Failed to prompt for ${options.name}: ${error instanceof Error ? error.message : String(error)}`);

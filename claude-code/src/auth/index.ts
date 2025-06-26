@@ -10,6 +10,7 @@ import {
   AuthConfig, 
   AuthMethod, 
   AuthResult, 
+  AuthState as AuthStateEnum,
   OAuthConfig 
 } from './types.js';
 import { 
@@ -223,7 +224,7 @@ export class AuthManager {
         success: true,
         token,
         method: AuthMethod.API_KEY,
-        state: AuthState.AUTHENTICATED
+        state: AuthStateEnum.AUTHENTICATED
       };
     } catch (error) {
       logger.error('API key authentication failed', error);
@@ -236,7 +237,7 @@ export class AuthManager {
         success: false,
         error: error instanceof Error ? error.message : String(error),
         method: AuthMethod.API_KEY,
-        state: AuthState.FAILED
+        state: AuthStateEnum.FAILED
       };
     }
   }
@@ -283,7 +284,7 @@ export class AuthManager {
         success: false,
         error: error instanceof Error ? error.message : String(error),
         method: AuthMethod.OAUTH,
-        state: AuthState.FAILED
+        state: AuthStateEnum.FAILED
       };
     }
   }

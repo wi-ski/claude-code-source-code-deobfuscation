@@ -250,6 +250,36 @@ export interface UserErrorOptions {
 }
 
 /**
+ * Error manager interface
+ */
+export interface ErrorManager {
+  /**
+   * Handle an error
+   */
+  handleError(error: unknown, options?: ErrorOptions): void;
+  
+  /**
+   * Handle a fatal error
+   */
+  handleFatalError(error: unknown): never;
+  
+  /**
+   * Handle unhandled rejection
+   */
+  handleUnhandledRejection(reason: unknown, promise: Promise<any>): void;
+  
+  /**
+   * Handle uncaught exception
+   */
+  handleUncaughtException(error: Error): void;
+  
+  /**
+   * Report an error
+   */
+  reportError(error: unknown, options?: ErrorOptions): void;
+}
+
+/**
  * User error
  */
 export class UserError extends Error {
